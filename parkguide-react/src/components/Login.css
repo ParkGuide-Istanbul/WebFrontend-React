@@ -39,7 +39,7 @@
   }
 
   .login-logo {
-    margin-bottom: 20px; /* Logonun altındaki boşluğu ayarlayın */
-    max-width: 300px; /* Logo boyutunu sınırlayın */
+    margin-bottom: 0%; /* Logonun altındaki boşluğu ayarlayın */
+    max-width: 600px; /* Logo boyutunu sınırlayın */
     height: auto; /* Yüksekliği otomatik ayarlayın */
   }
