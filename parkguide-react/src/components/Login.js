@@ -2,20 +2,26 @@ import React, { useState } from 'react';
 import AuthService from '../auth/AuthService';
 import './Login.css';
 import logo from '../assets/logo.png';
+import ErrorModal from './ErrorModal';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showModal, setShowModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage(''); // Her giriş denemesinde hata mesajını sıfırla
+    setShowModal(false);
     try {
       const token = await AuthService.login(username, password);
       console.log('Giriş başarılı, Token:', token);
-      localStorage.setItem('token', token);
-      // Burada token'ı saklayabilir ve/veya yönlendirme yapabilirsiniz
+      localStorage.setItem('token', token); // Token'ı localStorage'a kaydet
     } catch (error) {
       console.error('Giriş hatası', error);
+      setErrorMessage(error.message); 
+      setShowModal(true);
     }
   };
 
@@ -37,6 +43,7 @@ function Login() {
         />
         <button type="submit">Giriş Yap</button>
       </form>
+      {showModal && <ErrorModal message={errorMessage} onClose={() => setShowModal(false)} />}
     </div>
   );
 }

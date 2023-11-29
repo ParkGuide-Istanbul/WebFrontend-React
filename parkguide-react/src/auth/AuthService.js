@@ -8,9 +8,9 @@ const AuthService = {
         body: JSON.stringify({ username, password, requiredRoles: ["Admin", "ParkingSystemAdmin"]}),
       });
       debugger;
-  
+      const data2 = await response.json();
       if (!response.ok) {
-        throw new Error('Login başarısız');
+        throw new Error(data2.message);
       }
   
       const data = await response.json();
