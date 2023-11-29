@@ -55,9 +55,9 @@
 }
 
 .login-form input {
-  width: 100%;
+  width: calc(100% - 20px); /* Yüzde bazlı genişlikten padding/margin değerini çıkarın */
   padding: 10px;
-  margin: 10px 0;
+  margin: 10px 0px; /* Üst ve alt için 10px, sol ve sağ için 10px margin ekleyin */
   border: 1px solid #DDD;
   border-radius: 4px;
 }

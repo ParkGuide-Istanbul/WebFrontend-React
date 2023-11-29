@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import AuthService from '../auth/AuthService';
+import '../App.css'; 
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -18,8 +19,8 @@ function Login() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form onSubmit={handleSubmit} className="login-form">
         <input
           type="text"
           placeholder="Kullanıcı Adı"
