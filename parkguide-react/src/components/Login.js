@@ -10,6 +10,7 @@ function Login() {
     try {
       const token = await AuthService.login(username, password);
       console.log('Giriş başarılı, Token:', token);
+      localStorage.setItem('token', token);
       // Burada token'ı saklayabilir ve/veya yönlendirme yapabilirsiniz
     } catch (error) {
       console.error('Giriş hatası', error);
