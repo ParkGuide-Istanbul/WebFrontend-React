@@ -2,6 +2,7 @@
     background-color: #F3F2F7;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
@@ -35,4 +36,10 @@
   
   .login-form button:hover {
     background-color: #9B6DBF;
+  }
+
+  .login-logo {
+    margin-bottom: 20px; /* Logonun altındaki boşluğu ayarlayın */
+    max-width: 300px; /* Logo boyutunu sınırlayın */
+    height: auto; /* Yüksekliği otomatik ayarlayın */
   }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AuthService from '../auth/AuthService';
 import './Login.css';
+import logo from '../assets/logo.png';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -20,6 +21,7 @@ function Login() {
 
   return (
     <div className="login-container">
+    <img src={logo} alt="Logo" className="login-logo" />
       <form onSubmit={handleSubmit} className="login-form">
         <input
           type="text"
