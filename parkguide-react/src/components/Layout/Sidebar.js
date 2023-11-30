@@ -17,9 +17,9 @@ const Sidebar = () => {
   return (
 
 <aside className={`sidebar ${isOpen ? "open" : "closed"}`}>
-      <button onClick={toggleSidebar} className="toggle-btn">
-        Toggle
-      </button>
+    <button onClick={toggleSidebar} className="toggle-btn">
+    <span className="material-icons">menu</span>
+    </button>
       <ul>
         {menuItems.map(item => (
           <li key={item.name}>
