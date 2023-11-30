@@ -14,7 +14,7 @@ const Header = () => {
       <h1>ParkGuide Istanbul Admin Panel</h1>
       <div className="user-section" onClick={() => setDropdownOpen(!dropdownOpen)}>
         <img src={userAvatar} alt="User" className="user-image" />
-        <span className="username">{username}</span>
+        <span className="username">Barış Beydemir</span>
       </div>
       {dropdownOpen && <UserDropdown />}
     </header>
