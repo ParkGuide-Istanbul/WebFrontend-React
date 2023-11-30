@@ -8,12 +8,12 @@ const AuthService = {
         body: JSON.stringify({ username, password, requiredRoles: ["Admin", "ParkingSystemAdmin"]}),
       });
       debugger;
-      const data2 = await response.json();
+      const data = await response.json();
       if (!response.ok) {
-        throw new Error(data2.message);
+        throw new Error(data.message);
       }
   
-      const data = await response.json();
+      
       return data.message.token; // JWT token'ı döndür
     },
   

@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import AuthService from '../auth/AuthService';
+import AuthService from '../../auth/AuthService';
 import './Login.css';
-import logo from '../assets/logo.png';
-import ErrorModal from './ErrorModal';
+import logo from '../../assets/logo.png';
+import ErrorModal from '../ErrorModal/ErrorModal';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showModal, setShowModal] = useState(false);
+  let navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,8 +18,10 @@ function Login() {
     setShowModal(false);
     try {
       const token = await AuthService.login(username, password);
+      debugger;
       console.log('Giriş başarılı, Token:', token);
       localStorage.setItem('token', token); // Token'ı localStorage'a kaydet
+      navigate('/dashboard');
     } catch (error) {
       console.error('Giriş hatası', error);
       setErrorMessage(error.message); 
