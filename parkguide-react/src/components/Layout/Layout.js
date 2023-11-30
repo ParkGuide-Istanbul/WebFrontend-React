@@ -1,14 +1,16 @@
-// Layout.js
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import './Layout.css';
 
 const Layout = ({ children }) => {
   return (
-    <div>
+    <div className="layout">
       <Header />
-      <Sidebar />
-      <main>{children}</main> {/* Bu kısım dinamik içerik için */}
+      <div className="layout-body">
+        <Sidebar />
+        <main className="layout-content">{children}</main>
+      </div>
     </div>
   );
 };

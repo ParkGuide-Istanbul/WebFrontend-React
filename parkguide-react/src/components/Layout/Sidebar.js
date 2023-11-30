@@ -1,34 +1,37 @@
-// Sidebar.js
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom'; // React Router kullanıyorsanız
+import { NavLink } from 'react-router-dom';
+import './Sidebar.css';
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true); // Sidebar'ın açık olup olmadığının durumu
+  const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  // Sidebar menü öğeleri
   const menuItems = [
     { name: 'Ana Sayfa', path: '/' },
     { name: 'Profil', path: '/profil' },
-    // Diğer menü öğeleri...
+    // Diğer menü öğeleri burada listelenebilir
   ];
 
   return (
-    <aside className={isOpen ? "sidebar open" : "sidebar"}>
-      <button onClick={toggleSidebar}>Toggle</button>
-      <ul>
-        {menuItems.map(item => (
-          <li key={item.name}>
-            <NavLink to={item.path} activeClassName="active">
-              {item.name}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-    </aside>
+<aside className={`sidebar ${isOpen ? "open" : ""}`}>
+  <button onClick={toggleSidebar}>Toggle</button>
+  <nav className="menu">
+    {menuItems.map(item => (
+      <li key={item.name}> {/* `li` elemanına `key` prop'u ekleyin */}
+        <NavLink
+          to={item.path}
+          className={({ isActive }) => isActive ? 'menu-item active' : 'menu-item'}
+        >
+          {item.name}
+        </NavLink>
+      </li>
+    ))}
+  </nav>
+</aside>
+
   );
 };
 

@@ -1,0 +1,23 @@
+.header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-section {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .user-image {
+    border-radius: 50%; /* Yuvarlak avatar */
+    margin-right: 10px;
+  }
+  
+  .username {
+    font-weight: bold;
+  }
+  

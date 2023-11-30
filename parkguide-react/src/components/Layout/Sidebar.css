@@ -1,0 +1,26 @@
+.sidebar {
+    background-color: #343a40;
+    color: white;
+    width: 250px; /* Menü genişliği */
+    transition: width 0.3s; /* Animasyon etkisi */
+  }
+  
+  .sidebar.open {
+    width: 250px; /* Açıkken menü genişliği */
+  }
+  
+  .menu-item {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .menu-item.active {
+    background-color: #007bff;
+  }
+  
+  button {
+    /* Button stil önerileri yukarıda verilmiştir */
+  }
+  
