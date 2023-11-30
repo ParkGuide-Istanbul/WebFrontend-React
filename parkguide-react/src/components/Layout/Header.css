@@ -31,6 +31,9 @@
   .user-image {
     border-radius: 50%; /* Yuvarlak avatar */
     margin-right: 10px;
+    width: 40px; /* Genişlik */
+    height: 40px; /* Yükseklik */
+    object-fit: cover; /* Resmi kutuya sığdır */
   }
   
   .username {

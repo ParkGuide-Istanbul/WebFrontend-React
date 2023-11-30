@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import UserDropdown from './UserDropdown';
 import './Header.css';
 import logo from '../../assets/logoaraba.png';
+import userAvatar from '../../assets/useravatarazkucuk.png';
 
 const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -12,7 +13,7 @@ const Header = () => {
       <img src={logo} alt="Logo" className="logo" />
       <h1>ParkGuide Istanbul Admin Panel</h1>
       <div className="user-section" onClick={() => setDropdownOpen(!dropdownOpen)}>
-        <img src="/path/to/template-avatar.png" alt="User" className="user-image" />
+        <img src={userAvatar} alt="User" className="user-image" />
         <span className="username">{username}</span>
       </div>
       {dropdownOpen && <UserDropdown />}
