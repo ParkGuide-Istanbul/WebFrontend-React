@@ -17,7 +17,7 @@
     flex-grow: 1;
     text-align: left;
     font-family: 'Arial', sans-serif; /* Güzel bir font seçimi */
-    font-weight: lighter;
+    font-weight: bold;
     font-size: 18px; /* Başlık boyutu */
   }
   

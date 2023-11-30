@@ -1,12 +1,21 @@
 .sidebar {
     background-color: #343a40;
     color: white;
-    width: 250px; /* Menü genişliği */
-    transition: width 0.3s; /* Animasyon etkisi */
+    width: 250px; /* Kapalıyken menü genişliği */
+    transition: width 0.3s;
   }
   
   .sidebar.open {
     width: 250px; /* Açıkken menü genişliği */
+  }
+
+  .sidebar.closed {
+    width: 50px; /* Sidebar kapalıyken genişliği */
+    overflow-x: hidden; /* İçeriğin dışarı taşmasını önler */
+  }
+
+  .toggle-btn {
+    cursor: pointer;
   }
   
   .menu-item {
@@ -20,7 +29,5 @@
     background-color: #007bff;
   }
   
-  button {
-    /* Button stil önerileri yukarıda verilmiştir */
-  }
+ 
   

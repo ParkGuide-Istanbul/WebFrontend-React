@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <header className="header">
       <img src={logo} alt="Logo" className="logo" />
-      <h1>ParkGuide Istanbul</h1>
+      <h1>ParkGuide Istanbul Admin Panel</h1>
       <div className="user-section" onClick={() => setDropdownOpen(!dropdownOpen)}>
         <img src="/path/to/template-avatar.png" alt="User" className="user-image" />
         <span className="username">{username}</span>
