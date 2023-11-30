@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from './components/Login'; // Login bileşenini import edin
+import Login from './components/Login/Login'; // Login bileşenini import edin
 
 function App() {
   return (

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import AuthService from '../auth/AuthService';
+import AuthService from '../../auth/AuthService';
 import './Login.css';
-import logo from '../assets/logo.png';
-import ErrorModal from './ErrorModal';
+import logo from '../../assets/logo.png';
+import ErrorModal from '../ErrorModal/ErrorModal';
 
 function Login() {
   const [username, setUsername] = useState('');
