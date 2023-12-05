@@ -11,7 +11,8 @@ const Sidebar = () => {
 
   const menuItems = [
     { name: 'Ana Sayfa', path: '/' },
-    { name: 'Profil', path: '/profil' },
+    { name: 'Kullanıcılar', path: '/users' },
+    { name: 'Parklar', path: '/parks' }
   ];
 
   return (
