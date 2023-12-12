@@ -12,7 +12,9 @@
   .layout-content {
     flex-grow: 1;
     padding: 20px;
-    background-color: #fff; /* Arka planı beyaz yap */
-    overflow-y: auto; /* İçerik uzunsa kaydırma çubuğu ekle */
+  /*  background-color: #fff; /* Arka planı beyaz yap */
+    overflow-y: auto; /*İçerik uzunsa kaydırma çubuğu ekle  */
   }
+    
+
   
