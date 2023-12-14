@@ -1,20 +1,13 @@
 import { Box } from "@mui/material";
-
-
+import React, { useState, useEffect  } from 'react';
 import Button from "@material-ui/core/Button"
-import React from 'react'
 import SendIcon from '@mui/icons-material/Send'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-
 import TablePagination from '@mui/material/TablePagination';
-
-
-
 import { parkData } from '../data/parkData';
-
 import {
   GridRowModes,
   DataGrid,
@@ -22,12 +15,41 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
+import api from '../../services/api';
 
 
 
 const ParkList = () => {
-   
-  
+  // ı want to get park list object witj a sample endpoint with using this func apiRequest(url, 'GET', null, headers)
+  debugger;
+  const [parkList, setParkList] = useState([]);
+  const [parkListLoading, setParkListLoading] = useState(true);
+  const [parkListError, setParkListError] = useState(null);
+
+  useEffect(() => {
+    const getParkList = async () => {
+      debugger;
+      try {
+        debugger;
+        let headers = {
+          'Content-Type': 'application/json',
+        };
+        debugger;
+        const response = await api.get( "https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/listparks" , headers);
+        setParkList(response.data);
+      } catch (error) {
+        setParkListError(error);
+      } finally {
+        setParkListLoading(false);
+      }
+    };
+    getParkList();
+
+  }, []);
+
+
+
+
    
     
   const columns = [

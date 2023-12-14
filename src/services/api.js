@@ -5,7 +5,7 @@ const apiRequest = async (url, method = 'GET', body = null, headers = {}) => {
     const token = localStorage.getItem('token');
   
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers['Authorization'] = token;
     }
   
     const response = await fetch(url, {

@@ -17,10 +17,16 @@ function Login() {
     setErrorMessage(''); // Her giriş denemesinde hata mesajını sıfırla
     setShowModal(false);
     try {
-      const token = await AuthService.login(username, password);
+      const response = await AuthService.login(username, password);
+      localStorage.clear();
       debugger;
-      console.log('Giriş başarılı, Token:', token);
-      localStorage.setItem('token', token); // Token'ı localStorage'a kaydet
+      console.log('Giriş başarılı, Token:', response.token);
+      localStorage.setItem('isLoggedIn', true); // Giriş yapıldığını localStorage'a kaydet
+      localStorage.setItem('roles', response.roles); // Kullanıcı rollerini localStorage'a kaydet
+      localStorage.setItem('username', response.username); // Kullanıcı adını localStorage'a kaydet
+      localStorage.setItem('surname', response.surname); // Kullanıcı soyadını localStorage'a kaydet
+      localStorage.setItem('name', response.name); // Kullanıcı adını localStorage'a kaydet
+      localStorage.setItem('token', response.token); // Token'ı localStorage'a kaydet
       navigate('/dashboard');
     } catch (error) {
       console.error('Giriş hatası', error);

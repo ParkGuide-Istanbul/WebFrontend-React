@@ -14,7 +14,7 @@ const AuthService = {
       }
   
       
-      return data.message.token; // JWT token'ı döndür
+      return data.message; // JWT token'ı döndür
     },
   
     // Buraya token ile ilgili diğer fonksiyonlar eklenebilir (örn. token'ı kaydetme)

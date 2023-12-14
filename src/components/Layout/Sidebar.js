@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 //import './Sidebar.css';
 import {ProSidebar , Menu , MenuItem} from "react-pro-sidebar"
@@ -33,10 +33,36 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const Sidebar = () => {
+
+  
+  const [username, setUsername] = useState(''); 
+  const [name, setName] = useState(''); 
+  const [surname, setSurname] = useState(''); 
+  const [roles, setRoles] = useState(''); 
+  const [combinedName, setCombinedName] = useState('');
+  const [mostpowerful, setMostpowerful] = useState('');
+
+  useEffect(() => {
+    // Component mount olduğunda localStorage'dan kullanıcı adını çek
+    const storedUsername = localStorage.getItem('username');
+    const storedName = localStorage.getItem('name');
+    const storedSurname = localStorage.getItem('surname');
+    const storedRoles = localStorage.getItem('roles');
+    if (storedRoles.includes("Admin")) {
+      setMostpowerful("Admin");
+    } else {
+      setMostpowerful("ParkingSystemAdmin");
+    }
+    setCombinedName(storedName + " " + storedSurname);
+    if (storedUsername) {
+      setUsername(storedUsername); // State'i güncelle
+    }
+  }, []); // Boş dependency array ile sadece component mount edildiğinde çalışır
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+
 
   return (
     <Box
@@ -102,10 +128,10 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Emir Kerem Boğa 
+                  {combinedName || "Kullanıcı Adı"}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  Super Admin
+                  {mostpowerful || "Kullanıcı Rolü"}
                 </Typography>
               </Box>
             </Box>
@@ -114,7 +140,7 @@ const Sidebar = () => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -132,13 +158,13 @@ const Sidebar = () => {
           
 
            
-            <Item
+            {/* <Item
               title="Profile Form"
               to="/profile"
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
           
             
           <Item
