@@ -27,24 +27,35 @@ const ParkList = () => {
   const [parkListError, setParkListError] = useState(null);
 
   useEffect(() => {
-    const getParkList = async () => {
-      debugger;
+    async function fetchData() {
       try {
+        const response = await api.get("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/listparks", {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        debugger  ;
+        const transformedData = response.map(park => ({
+          id: park.parkID,
+          parkName: park.parkName,
+          lat: park.lat,
+          lng: park.lng,
+          capacity: park.capacity,
+          emptyCapacity: park.emptyCapacity,
+          isActive: park.isOpen === 1 ? "Aktif" : "Pasif"
+        }));
         debugger;
-        let headers = {
-          'Content-Type': 'application/json',
-        };
+        setParkList(transformedData);
         debugger;
-        const response = await api.get( "https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/listparks" , headers);
-        setParkList(response.data);
       } catch (error) {
-        setParkListError(error);
+        debugger;
+        setParkListError(error.message);
+        debugger;
       } finally {
+        debugger;
         setParkListLoading(false);
+        debugger;
       }
-    };
-    getParkList();
-
+    }
+    fetchData();
   }, []);
 
 
@@ -54,7 +65,7 @@ const ParkList = () => {
     
   const columns = [
     { 
-      field: "id", 
+      field: "parkID", 
       headerName: "Park ID" , 
       type: "Number" 
     },
@@ -230,7 +241,7 @@ const ParkList = () => {
         }}
       >
         <DataGrid checkboxSelection 
-        rows={parkData} 
+        rows={parkList} 
         columns={columns}
         editMode="row"
         initialState={{
