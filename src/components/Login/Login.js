@@ -17,7 +17,9 @@ function Login() {
     setErrorMessage(''); // Her giriş denemesinde hata mesajını sıfırla
     setShowModal(false);
     try {
-      const response = await AuthService.login(username, password);
+      let trimmedUsername = username.trim();
+      let trimmedPassword = password.trim();
+      const response = await AuthService.login(trimmedUsername, trimmedPassword);
       localStorage.clear();
       debugger;
       console.log('Giriş başarılı, Token:', response.token);
