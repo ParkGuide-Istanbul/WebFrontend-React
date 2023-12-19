@@ -25,6 +25,8 @@ const ParkList = () => {
   const [parkList, setParkList] = useState([]);
   const [parkListLoading, setParkListLoading] = useState(true);
   const [parkListError, setParkListError] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -40,7 +42,7 @@ const ParkList = () => {
           lng: park.lng,
           capacity: park.capacity,
           emptyCapacity: park.emptyCapacity,
-          isActive: park.isOpen === 1 ? "Aktif" : "Pasif"
+          isActive: park.state === "1" ? "Aktif" : "İnaktif"
         }));
         debugger;
         setParkList(transformedData);
@@ -56,7 +58,7 @@ const ParkList = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [refreshKey]);
 
 
 
@@ -65,7 +67,7 @@ const ParkList = () => {
     
   const columns = [
     { 
-      field: "parkID", 
+      field: "id", 
       headerName: "Park ID" , 
       type: "Number" 
     },
@@ -114,7 +116,7 @@ const ParkList = () => {
         width : 100,
         cellClassName: "actions",
         getActions : ({id}) => {
-          const isInEditMode = rowModesModel[id]?.mode == GridRowModes.Edit;
+          const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
           if(isInEditMode){
             return [
@@ -171,6 +173,38 @@ const ParkList = () => {
     }
   };
 
+  const handleSelectionModelChange = (newSelectionModel) => {
+    setSelectedRows(newSelectionModel);
+    console.log("Selected Rows:", newSelectionModel); // Debugging line
+    debugger;
+  };
+
+  const handleSubmit = async () => {
+    console.log("Selected Rows on Submit:", selectedRows); // Debugging line
+    debugger;
+    const payload = {
+      parks: selectedRows.map((id) => {
+        const row = parkList.find((row) => row.id === id);
+        debugger;
+        return {
+          parkId: row.id.toString(),
+          state: row.isActive === "Aktif" ? "1" : "0",
+        };
+      }),
+    };
+    console.log("Payload:", payload); // Debugging line
+    debugger;
+    try {
+      await api.post("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/configurestateparks", payload, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      setRefreshKey(oldKey => oldKey + 1);
+    } catch (error) {
+      // Handle error
+      console.error("Error submitting parks: ", error);
+    }
+  };
+
   const handleEditClick = (id) => () => {
     
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
@@ -209,7 +243,7 @@ const ParkList = () => {
 
   
   return (
-    <Box m="20px">
+    <Box key={refreshKey} m="20px">
       
       <Box
         m="40px 0 0 0"
@@ -254,6 +288,8 @@ const ParkList = () => {
         pageSizeOptions={10}
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
+        onRowSelectionModelChange={handleSelectionModelChange}
+
         onRowEditStop={handleRowEditStop}
         processRowUpdate={processRowUpdate}
        
@@ -267,7 +303,7 @@ const ParkList = () => {
     
 
       
-      <Button variant = "contained" color ="secondary"  endIcon= {<SendIcon />}>
+      <Button variant = "contained" color ="secondary"  endIcon= {<SendIcon />} onClick={handleSubmit}>
         SUBMIT
       </Button>
     </Box>
