@@ -115,7 +115,7 @@ const ParkList = () => {
         headerName: "Düzenle",
         width : 100,
         cellClassName: "actions",
-        getActions : ({id}) => {
+        getActions : ({id, isActive}) => {
           const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
           if(isInEditMode){
@@ -126,7 +126,7 @@ const ParkList = () => {
                 sx={{
                   color: 'primary.main',
                 }}
-                onClick={handleSaveClick(id)}
+                onClick={handleSaveClick(id, isActive)}
               />,
               <GridActionsCellItem
                 icon={<CancelIcon />}
@@ -205,13 +205,21 @@ const ParkList = () => {
     }
   };
 
+  const handleUpdateParkList = (id, isActive) =>{
+    let updatedParkList = parkList.map((item)=>
+      item.id === id ? {...item, isActive: isActive} : item
+    );
+    setParkList(updatedParkList);
+  }
+
   const handleEditClick = (id) => () => {
     
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id) => () => {
+  const handleSaveClick = (id, isActive) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    handleUpdateParkList(id, isActive);
   };
 
   const handleDeleteClick = (id) => () => {
