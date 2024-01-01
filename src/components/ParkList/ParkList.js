@@ -16,6 +16,7 @@ import {
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import api from '../../services/api';
+import './ParkList.css';
 
 
 
@@ -28,6 +29,7 @@ const ParkList = () => {
   const [parkListError, setParkListError] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -45,7 +47,8 @@ const ParkList = () => {
           emptyCapacity: park.emptyCapacity,
           isActive: park.state === "1" ? "Aktif" : "İnaktif"
         }));
-        
+        debugger;
+        setLoading(false);
         setParkList(transformedData);
        
       } catch (error) {
@@ -61,11 +64,6 @@ const ParkList = () => {
     fetchData();
   }, [refreshKey]);
 
-
-
-
-   
-    
   const columns = [
     { 
       field: "id", 
@@ -206,6 +204,7 @@ const ParkList = () => {
       await api.post("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/configurestateparks", payload, {
         headers: { 'Content-Type': 'application/json' }
       });
+      debugger;
       setRefreshKey(oldKey => oldKey + 1);
       window.location.reload();
     } catch (error) {
@@ -260,69 +259,79 @@ const ParkList = () => {
 
   
   return (
-    <Box key={refreshKey} m="20px">
+    <Box className={`app-container ${loading ? 'gifBox' : ''}`}>
+      {loading ? (
+        // Show the loading spinner while waiting for a response
+        <img src="/logogif.gif" alt="Loading" className="gif"/>
+      ) : (
+        // Render your content when the loading is complete
+        <Box key={refreshKey} m="20px">
+        
+        <Box
+          m="40px 0 0 0"
+          height="70vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+            
+            },
+            "& .MuiDataGrid-columnHeaders": {
       
-      <Box
-        m="40px 0 0 0"
-        height="70vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-           
-          },
-          "& .MuiDataGrid-columnHeaders": {
-     
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-        
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-     
-          },
-          "& .MuiCheckbox-root": {
-        
-          },
-        }}
-      >
-        <DataGrid checkboxSelection 
-        rows={parkList} 
-        columns={columns}
-        editMode="row"
-        initialState={{
-          pagination: {
-            paginationModel : {
-              pageSize : 10
-            }
-          } 
-        }}
-        pageSizeOptions={10}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowSelectionModelChange={handleSelectionModelChange}
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+          
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+      
+            },
+            "& .MuiCheckbox-root": {
+          
+            },
+          }}
+        >
+          <DataGrid checkboxSelection 
+          rows={parkList} 
+          columns={columns}
+          editMode="row"
+          initialState={{
+            pagination: {
+              paginationModel : {
+                pageSize : 10
+              }
+            } 
+          }}
+          pageSizeOptions={10}
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowSelectionModelChange={handleSelectionModelChange}
 
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-       
-        slotProps={{
-          toolbar: { setRows, setRowModesModel },
-        }} 
-        />
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+        
+          slotProps={{
+            toolbar: { setRows, setRowModesModel },
+          }} 
+          />
 
-   
-      </Box>
     
+        </Box>
+      
+
+        
+        <Button variant = "contained" color ="secondary"  endIcon= {<SendIcon />} onClick={handleSubmit}>
+          SUBMIT
+        </Button>
+      </Box>
+      )}
 
       
-      <Button variant = "contained" color ="secondary"  endIcon= {<SendIcon />} onClick={handleSubmit}>
-        SUBMIT
-      </Button>
     </Box>
   );
 };

@@ -31,6 +31,8 @@ const UserList = () => {
   const [userListError, setUserListError] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -49,6 +51,7 @@ const UserList = () => {
        
         }));
         debugger;
+        setLoading(false);
         setUserList(transformedData);
         debugger;
       } catch (error) {
@@ -240,62 +243,72 @@ const UserList = () => {
   };
 
   return (
-    <Box m="20px">
+    <Box className={`app-container ${loading ? 'gifBox' : ''}`}>
+      {loading ? (
+        // Show the loading spinner while waiting for a response
+        <img src="/logogif.gif" alt="Loading" className="gif"/>
+      ) : (
+        // Render your content when the loading is complete
+      <Box m="20px">
+        
+        <Box
+          m="40px 0 0 0"
+          height="75vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+            
+            },
+            "& .MuiDataGrid-columnHeaders": {
       
-      <Box
-        m="40px 0 0 0"
-        height="75vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-           
-          },
-          "& .MuiDataGrid-columnHeaders": {
-     
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-        
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-     
-          },
-          "& .MuiCheckbox-root": {
-        
-          },
-        }}
-      >
-        <DataGrid checkboxSelection 
-        rows={userList} 
-        columns={columns} 
-        editMode="row"
-        initialState={{
-          pagination: {
-            paginationModel : {
-              pageSize : 10
-            }
-          } 
-        }}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+          
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+      
+            },
+            "& .MuiCheckbox-root": {
+          
+            },
+          }}
+        >
+          <DataGrid checkboxSelection 
+          rows={userList} 
+          columns={columns} 
+          editMode="row"
+          initialState={{
+            pagination: {
+              paginationModel : {
+                pageSize : 10
+              }
+            } 
+          }}
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
 
-       
-        slotProps={{
-          toolbar: { setRows, setRowModesModel },
-        }}
-        />
+        
+          slotProps={{
+            toolbar: { setRows, setRowModesModel },
+          }}
+          />
+        </Box>
+        <Button variant = "contained" color = "secondary" endIcon= {<SendIcon />} onClick={handleSubmit}>
+          SUBMIT
+        </Button>
       </Box>
-      <Button variant = "contained" color = "secondary" endIcon= {<SendIcon />} onClick={handleSubmit}>
-        SUBMIT
-      </Button>
+    )}
+
+      
     </Box>
    
   );
