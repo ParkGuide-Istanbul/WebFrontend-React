@@ -186,10 +186,17 @@ const ParkList = () => {
     const payload = {
       parks: selectedRows.map((id) => {
         const row = parkList.find((row) => row.id === id);
+        let state = []
+        if (row.isActive === "Aktif"){
+            state = "1"
+        }
+        else if (row.isActive === "İnaktif"){
+            state = "0"
+        }
         debugger;
         return {
           parkId: row.id.toString(),
-          state: row.isActive === "Aktif" ? "1" : "0",
+          state: state
         };
       }),
     };
@@ -200,6 +207,7 @@ const ParkList = () => {
         headers: { 'Content-Type': 'application/json' }
       });
       setRefreshKey(oldKey => oldKey + 1);
+      window.location.reload();
     } catch (error) {
       // Handle error
       console.error("Error submitting parks: ", error);
@@ -218,9 +226,8 @@ const ParkList = () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id, isActive) => () => {
+  const handleSaveClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    handleUpdateParkList(id, isActive);
   };
 
   const handleDeleteClick = (id) => () => {
@@ -239,9 +246,10 @@ const ParkList = () => {
     }
   };
   const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+    setParkList((prev) =>
+      prev.map((row) => (row.id === newRow.id ? { ...row, ...newRow } : row))
+    );
+    return newRow;
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {

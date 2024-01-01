@@ -147,14 +147,8 @@ const UserList = () => {
                 color: 'primary.main',
               }}
               onClick={handleSaveClick(id)}
-            />,
-            <GridActionsCellItem
-              icon={<CancelIcon />}
-              label="Cancel"
-              className="textPrimary"
-              onClick={handleCancelClick(id)}
-              color="inherit"
-            />,
+            />
+          
           ];
         }
         return [
@@ -164,13 +158,8 @@ const UserList = () => {
             className="textPrimary"
             onClick={handleEditClick(id)}
             color="inherit"
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
+          />
+         
         ];
 
         }
@@ -196,11 +185,7 @@ const UserList = () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-    console.log(id) 
-   
-  };
+
 
   const handleSubmit = async () => {
     console.log("Selected Rows on Submit:", selectedRows); // Debugging line
@@ -243,17 +228,7 @@ const UserList = () => {
   };
 
 
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
 
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
