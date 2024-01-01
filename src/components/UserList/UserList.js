@@ -199,11 +199,11 @@ const UserList = () => {
         debugger;
 
         let roles = [];
-        if (row.Role.includes("Admin")) {
+        if (row.Role ==="Admin") {
           roles = ["Admin", "ParkingSystemAdmin", "StandardUser"];
-        } else if (row.Role.includes("ParkingSystemAdmin")) {
+        } else if (row.Role === "ParkingSystemAdmin") {
           roles = ["ParkingSystemAdmin", "StandardUser"];
-        } else if (row.Role.includes("StandardUser")) {
+        } else if (row.Role === "StandardUser") {
           roles = ["StandardUser"];
         }
         return {
@@ -233,9 +233,10 @@ const UserList = () => {
 
 
   const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+    setUserList((prev) =>
+      prev.map((row) => (row.id === newRow.id ? { ...row, ...newRow } : row))
+    );
+    return newRow;
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {

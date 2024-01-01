@@ -126,14 +126,8 @@ const ParkList = () => {
                   color: 'primary.main',
                 }}
                 onClick={handleSaveClick(id, isActive)}
-              />,
-              <GridActionsCellItem
-                icon={<CancelIcon />}
-                label="Cancel"
-                className="textPrimary"
-                onClick={handleCancelClick(id)}
-                color="inherit"
-              />,
+              />
+             
             ];
           }
           return [
@@ -143,13 +137,8 @@ const ParkList = () => {
               className="textPrimary"
               onClick={handleEditClick(id)}
               color="inherit"
-            />,
-            <GridActionsCellItem
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={handleDeleteClick(id)}
-              color="inherit"
-            />,
+            />
+         
           ];
 
           }
@@ -213,12 +202,7 @@ const ParkList = () => {
     }
   };
 
-  const handleUpdateParkList = (id, isActive) =>{
-    let updatedParkList = parkList.map((item)=>
-      item.id === id ? {...item, isActive: isActive} : item
-    );
-    setParkList(updatedParkList);
-  }
+  
 
   const handleEditClick = (id) => () => {
     
@@ -229,21 +213,7 @@ const ParkList = () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
+ 
   const processRowUpdate = (newRow) => {
     setParkList((prev) =>
       prev.map((row) => (row.id === newRow.id ? { ...row, ...newRow } : row))
