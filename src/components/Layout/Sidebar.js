@@ -66,7 +66,9 @@ const Sidebar = () => {
   const [selected, setSelected] = useState("Dashboard");
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     localStorage.clear();
+    localStorage.setItem('authenticated', false);
   }
 
   return (
@@ -185,9 +187,7 @@ const Sidebar = () => {
               title="Logout"
               to="/login"
               icon={<LogoutIcon />}
-              selected={selected}
-              setSelected={setSelected}
-              onClick={handleLogout}
+              setSelected={handleLogout}
             />
            
           </Box>

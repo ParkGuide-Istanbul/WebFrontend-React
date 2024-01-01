@@ -17,6 +17,7 @@ function Login() {
     setErrorMessage(''); // Her giriş denemesinde hata mesajını sıfırla
     setShowModal(false);
     try {
+      let authenticated = false;
       let trimmedUsername = username.trim();
       let trimmedPassword = password.trim();
       const response = await AuthService.login(trimmedUsername, trimmedPassword);
@@ -29,6 +30,8 @@ function Login() {
       localStorage.setItem('surname', response.surname); // Kullanıcı soyadını localStorage'a kaydet
       localStorage.setItem('name', response.name); // Kullanıcı adını localStorage'a kaydet
       localStorage.setItem('token', response.token); // Token'ı localStorage'a kaydet
+      authenticated = true;
+      localStorage.setItem('authenticated', authenticated);
       navigate('/dashboard');
     } catch (error) {
       console.error('Giriş hatası', error);

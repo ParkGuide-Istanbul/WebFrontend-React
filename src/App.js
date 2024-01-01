@@ -9,22 +9,33 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Re
 
 
 function App() {
+  localStorage.setItem('authenticated', false);
+  
+  function requireAuth(nextState, replace, next){
+    debugger;
+    console.log(localStorage.getItem('authenticated'));
+    if (localStorage.getItem('authenticated') !== true ) {
+      debugger;
+      replace({
+        pathname: "/login",
+        state: {nextPathname: nextState.location.pathname}
+      });
+      
+    }
+  }
 
   return (
    
-        <Router>
+    <Router>
       <Routes>
-        <Route path="/" element={<Login />} />  
-        <Route path="/login" element={<Login />} />  
-        <Route path="/dashboard" element={<Dashboard />}/> 
-        <Route path="/users" element={<Users />}/> 
-        <Route path="/parks" element={<Parks />}/> 
+        <Route path="/login"      element={<Login />}     onEnter={requireAuth()}/>  
+        <Route path="/"           element={<Login />}     onEnter={requireAuth()}/>  
+        <Route path="/dashboard"  element={<Dashboard />} onEnter={requireAuth()}/> 
+        <Route path="/users"      element={<Users />}     onEnter={requireAuth()}/> 
+        <Route path="/parks"      element={<Parks />}     onEnter={requireAuth()}/> 
       </Routes>
     </Router>
 
-      
-    
-   
    
   );
 }
