@@ -12,6 +12,8 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined"
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined"
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined"
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined"
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -63,6 +65,9 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
+  const handleLogout = () => {
+    localStorage.clear();
+  }
 
   return (
     <Box
@@ -175,9 +180,15 @@ const Sidebar = () => {
               setSelected={setSelected}
             />
             
-           
-           
-          
+            <Item
+              className="logoutButton"
+              title="Logout"
+              to="/login"
+              icon={<LogoutIcon />}
+              selected={selected}
+              setSelected={setSelected}
+              onClick={handleLogout}
+            />
            
           </Box>
         </Menu>
