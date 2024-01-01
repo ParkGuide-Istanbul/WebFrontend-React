@@ -1,12 +1,12 @@
 import { Box, Typography, useTheme } from "@mui/material";
-
+import React, { useState, useEffect  } from 'react';
 import Button from "@material-ui/core/Button"
 import { userData } from '../data/userData';
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import SendIcon from '@mui/icons-material/Send'
-import React from 'react'
+
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import SaveIcon from '@mui/icons-material/Save'
@@ -19,44 +19,98 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
+import api from '../../services/api';
+
 
 
 
 const UserList = () => {
-  
+  debugger;
+  const [userList, setUserList] = useState([]);
+  const [userListLoading, setUserListLoading] = useState(true);
+  const [userListError, setUserListError] = useState(null);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/getuserlist", {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        debugger  ;
+        const transformedData = response.map((user , index) => ({
+          id : index + 1,
+          userName : user.Username,
+          Name: user.Name,
+          Surname: user.Surname,
+          mail: user.Mail,
+          Role: user.Roles,
+       
+        }));
+        debugger;
+        setUserList(transformedData);
+        debugger;
+      } catch (error) {
+        debugger;
+        setUserListError(error.message);
+        debugger;
+      } finally {
+        debugger;
+        setUserListLoading(false);
+        debugger;
+      }
+    }
+    fetchData();
+  }, [refreshKey]);
+
   const columns = [
     { field: "id", headerName: "ID" },
     {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
+      field: "userName",
+      headerName: "Username",
+
       cellClassName: "name-column--cell",
     },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
+      field: "Name",
+      headerName: "Name",
       headerAlign: "left",
       align: "left",
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
+      field: "Surname",
+      headerName: "Surname",
+      flex: 1,
+    },
+  
+    {
+      field: "mail",
+      headerName: "Mail",
       flex: 1,
     },
     {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-    },
-    {
-      field: "access",
+      field: "Role",
       headerName: "Access Level",
       flex: 1,
-      editable : true , 
-      type : "singleSelect",
-      valueOptions : ["admin" ,"manager", "user"],
-      renderCell: ({ row: { access } }) => {
+      editable: true,
+      type: "singleSelect",
+      valueOptions: ["Admin", "Parking System Admin", "Standard User"],
+      renderCell: ({ row }) => {
+        let displayText = "";
+        let Icon = null;
+    
+        if (row.Role.includes("Admin")) {
+          displayText = "Admin";
+          Icon = AdminPanelSettingsOutlinedIcon;
+        } else if (row.Role.includes("ParkingSystemAdmin")) {
+          displayText = "Parking System Admin";
+          Icon = SecurityOutlinedIcon;
+        } else if (row.Role.includes("StandardUser")) {
+          displayText = "Standard User";
+          Icon = LockOpenOutlinedIcon;
+        }
+    
         return (
           <Box
             width="60%"
@@ -64,19 +118,17 @@ const UserList = () => {
             p="5px"
             display="flex"
             justifyContent="center"
-            
             borderRadius="4px"
           >
-            {access === "admin" && <AdminPanelSettingsOutlinedIcon />}
-            {access === "manager" && <SecurityOutlinedIcon />}
-            {access === "user" && <LockOpenOutlinedIcon />}
-            <Typography  sx={{ ml: "5px" }}>
-              {access}
+            {Icon && <Icon />}
+            <Typography sx={{ ml: "5px" }}>
+              {displayText}
             </Typography>
           </Box>
         );
       },
     },
+    
     {
       field: "actions",
       type : "actions",
@@ -150,6 +202,47 @@ const UserList = () => {
    
   };
 
+  const handleSubmit = async () => {
+    console.log("Selected Rows on Submit:", selectedRows); // Debugging line
+    debugger;
+    const payload = {
+      users: selectedRows.map((id) => {
+        const row = userList.find((row) => row.id === id);
+        debugger;
+
+        let roles = [];
+        if (row.Role.includes("Admin")) {
+          roles = ["Admin", "ParkingSystemAdmin", "StandardUser"];
+        } else if (row.Role.includes("ParkingSystemAdmin")) {
+          roles = ["ParkingSystemAdmin", "StandardUser"];
+        } else if (row.Role.includes("StandardUser")) {
+          roles = ["StandardUser"];
+        }
+        return {
+          Username: row.Username,
+          Name: row.Name,
+          Surname: row.Surname,
+          Mail: row.Mail,
+          Username: row.Username,
+          Roles : roles
+          
+        };
+      }),
+    };
+    console.log("Payload:", payload); // Debugging line
+    debugger;
+    try {
+      await api.post("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/edituserlist", payload, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      setRefreshKey(oldKey => oldKey + 1);
+    } catch (error) {
+      // Handle error
+      console.error("Error submitting users: ", error);
+    }
+  };
+
+
   const handleCancelClick = (id) => () => {
     setRowModesModel({
       ...rowModesModel,
@@ -204,9 +297,16 @@ const UserList = () => {
         }}
       >
         <DataGrid checkboxSelection 
-        rows={userData} 
+        rows={userList} 
         columns={columns} 
         editMode="row"
+        initialState={{
+          pagination: {
+            paginationModel : {
+              pageSize : 10
+            }
+          } 
+        }}
         rowModesModel={rowModesModel}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
@@ -218,7 +318,7 @@ const UserList = () => {
         }}
         />
       </Box>
-      <Button variant = "contained" color = "secondary" endIcon= {<SendIcon />}>
+      <Button variant = "contained" color = "secondary" endIcon= {<SendIcon />} onClick={handleSubmit}>
         SUBMIT
       </Button>
     </Box>

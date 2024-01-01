@@ -48,7 +48,7 @@ const Sidebar = () => {
     const storedName = localStorage.getItem('name');
     const storedSurname = localStorage.getItem('surname');
     const storedRoles = localStorage.getItem('roles');
-    if (storedRoles.includes("Admin")) {
+    if (storedRoles && storedRoles.includes("Admin")) {
       setMostpowerful("Admin");
     } else {
       setMostpowerful("ParkingSystemAdmin");

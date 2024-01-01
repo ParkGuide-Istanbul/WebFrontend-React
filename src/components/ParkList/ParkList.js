@@ -19,9 +19,10 @@ import api from '../../services/api';
 
 
 
+
 const ParkList = () => {
   // ı want to get park list object witj a sample endpoint with using this func apiRequest(url, 'GET', null, headers)
-  debugger;
+ 
   const [parkList, setParkList] = useState([]);
   const [parkListLoading, setParkListLoading] = useState(true);
   const [parkListError, setParkListError] = useState(null);
@@ -34,7 +35,7 @@ const ParkList = () => {
         const response = await api.get("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/listparks", {
           headers: { 'Content-Type': 'application/json' }
         });
-        debugger  ;
+       
         const transformedData = response.map(park => ({
           id: park.parkID,
           parkName: park.parkName,
@@ -44,17 +45,17 @@ const ParkList = () => {
           emptyCapacity: park.emptyCapacity,
           isActive: park.state === "1" ? "Aktif" : "İnaktif"
         }));
-        debugger;
+        
         setParkList(transformedData);
-        debugger;
+       
       } catch (error) {
-        debugger;
+        
         setParkListError(error.message);
-        debugger;
+       
       } finally {
-        debugger;
+       
         setParkListLoading(false);
-        debugger;
+       
       }
     }
     fetchData();
