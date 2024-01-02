@@ -49,12 +49,14 @@ const Sidebar = () => {
     const storedUsername = localStorage.getItem('username');
     const storedName = localStorage.getItem('name');
     const storedSurname = localStorage.getItem('surname');
-    const storedRoles = localStorage.getItem('roles');
-    if (storedRoles && storedRoles.includes("Admin")) {
-      setMostpowerful("Admin");
-    } else {
-      setMostpowerful("ParkingSystemAdmin");
-    }
+    const storedRolesString = localStorage.getItem('roles');
+    const storedRoles = storedRolesString ? storedRolesString.split(',') : [];
+    const rolePriority = ["Admin", "ParkingSystemAdmin", "StandardUser"];
+    const role = rolePriority.find(priorityRole => 
+      storedRoles.includes(priorityRole)
+    );
+    setMostpowerful(role)
+    localStorage.setItem('mostpowerful' ,role)
     setCombinedName(storedName + " " + storedSurname);
     if (storedUsername) {
       setUsername(storedUsername); // State'i güncelle
@@ -154,25 +156,16 @@ const Sidebar = () => {
             />
 
            
-            <Item
-              title="Manage Users"
-              to="/users"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+          {localStorage.getItem('mostpowerful') === "Admin" && (
+              <Item
+                title="Manage Users"
+                to="/users"
+                icon={<PeopleOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )}
          
-          
-
-           
-            {/* <Item
-              title="Profile Form"
-              to="/profile"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
-          
             
           <Item
               title="Manage Parks"

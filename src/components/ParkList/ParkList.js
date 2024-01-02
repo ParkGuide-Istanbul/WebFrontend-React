@@ -45,7 +45,7 @@ const ParkList = () => {
           lng: park.lng,
           capacity: park.capacity,
           emptyCapacity: park.emptyCapacity,
-          isActive: park.state === "1" ? "Aktif" : "İnaktif"
+          isActive: park.state === "1" ? "Active" : "Inactive"
         }));
         debugger;
         setLoading(false);
@@ -72,41 +72,41 @@ const ParkList = () => {
     },
     {
       field: "parkName",
-      headerName: "Park İsmi",
+      headerName: "Park Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
       field: "lat",
-      headerName: "Enlem",
+      headerName: "Latitude",
       headerAlign: "left",
       align: "left",
     },
     {
       field: "lng",
-      headerName: "Boylam",
+      headerName: "Longitude",
       flex: 1,
     },
     {
       field: "capacity",
-      headerName: "Kapasite",
+      headerName: "Capacity",
       flex: 1,
     },
     {
       field: "emptyCapacity",
-      headerName: "Boş Kapasite",
+      headerName: "Empty Capacity",
       flex: 1,
       
     },
     {
         field: "isActive",
-        headerName: "Aktiflik Durumu",
+        headerName: "Activeness",
         flex: 1,
         editable : true ,
         type : "singleSelect",
         width : 200,
         valueOptions : ({id, row, field}) => {
-          return ['Aktif' , 'İnaktif']
+          return ['Active' , 'Inactive']
       }
         
       },
@@ -114,7 +114,7 @@ const ParkList = () => {
       {
         field: "actions",
         type : "actions",
-        headerName: "Düzenle",
+        headerName: "Edit",
         width : 100,
         cellClassName: "actions",
         getActions : ({id, isActive}) => {
@@ -177,10 +177,10 @@ const ParkList = () => {
       parks: selectedRows.map((id) => {
         const row = parkList.find((row) => row.id === id);
         let state = []
-        if (row.isActive === "Aktif"){
+        if (row.isActive === "Active"){
             state = "1"
         }
-        else if (row.isActive === "İnaktif"){
+        else if (row.isActive === "Inactive"){
             state = "0"
         }
         debugger;
@@ -267,9 +267,7 @@ const ParkList = () => {
             "& .MuiCheckbox-root": {
               color: "green"
             },
-            ".MuiButtonBase-root": {
-              
-            }
+          
           }}
         >
           <DataGrid checkboxSelection 

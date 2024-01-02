@@ -60,9 +60,7 @@ const Header = () => {
         : <LightModeOutlinedIcon /> }
 
         </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
-        </IconButton>
+    
       </Box>
     </Box>
   );

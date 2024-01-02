@@ -1,21 +1,19 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import React, { useState, useEffect  } from 'react';
 import Button from "@material-ui/core/Button"
-import { userData } from '../data/userData';
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import SendIcon from '@mui/icons-material/Send'
-
 import EditIcon from '@mui/icons-material/Edit'
-import DeleteIcon from '@mui/icons-material/Delete'
 import SaveIcon from '@mui/icons-material/Save'
-import CancelIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
+import ErrorModal from '../ErrorModal/ErrorModal'; 
+
 
 import {
   GridRowModes,
   DataGrid,
-  GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
@@ -25,7 +23,9 @@ import api from '../../services/api';
 
 
 const UserList = () => {
- 
+  const navigate = useNavigate();
+  const [hasPermission, setHasPermission] = useState(true); // Yetki durumunu kontrol eden state
+  const [errorMessage, setErrorMessage] = useState(''); 
   const [userList, setUserList] = useState([]);
   const [userListLoading, setUserListLoading] = useState(true);
   const [userListError, setUserListError] = useState(null);
@@ -35,6 +35,13 @@ const UserList = () => {
 
 
   useEffect(() => {
+    const mostpowerful = localStorage.getItem('mostpowerful');
+    if (mostpowerful !== 'Admin') {
+      setHasPermission(false);
+      setErrorMessage('You have no permission to access this page.');
+      return;
+    }
+
     async function fetchData() {
       try {
         const response = await api.get("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/getuserlist", {
@@ -68,6 +75,7 @@ const UserList = () => {
     fetchData();
   }, [refreshKey]);
 
+ 
   const columns = [
     { field: "id", headerName: "ID" },
     {
@@ -152,7 +160,7 @@ const UserList = () => {
     {
       field: "actions",
       type : "actions",
-      headerName: "Düzenle",
+      headerName: "Edit",
       width : 100,
       cellClassName: "actions",
       getActions : ({id}) => {
@@ -269,6 +277,9 @@ const UserList = () => {
     setRowModesModel(newRowModesModel);
   };
   
+  if (!hasPermission) {
+    return <ErrorModal message={errorMessage} onClose={() => navigate('/dashboard')} />;
+  }
 
   return (
     <Box className={`app-container ${loading ? 'gifBox' : ''}`}>
