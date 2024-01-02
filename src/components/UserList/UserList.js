@@ -25,7 +25,7 @@ import api from '../../services/api';
 
 
 const UserList = () => {
-  debugger;
+ 
   const [userList, setUserList] = useState([]);
   const [userListLoading, setUserListLoading] = useState(true);
   const [userListError, setUserListError] = useState(null);
@@ -40,7 +40,7 @@ const UserList = () => {
         const response = await api.get("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/getuserlist", {
           headers: { 'Content-Type': 'application/json' }
         });
-        debugger  ;
+        
         const transformedData = response.map((user , index) => ({
           id : index + 1,
           userName : user.Username,
@@ -48,20 +48,21 @@ const UserList = () => {
           Surname: user.Surname,
           mail: user.Mail,
           Role: user.Roles,
-       
+          
+
         }));
-        debugger;
+      
         setLoading(false);
         setUserList(transformedData);
-        debugger;
+      
       } catch (error) {
-        debugger;
+       
         setUserListError(error.message);
-        debugger;
+     
       } finally {
-        debugger;
+  
         setUserListLoading(false);
-        debugger;
+ 
       }
     }
     fetchData();
@@ -98,21 +99,36 @@ const UserList = () => {
       flex: 1,
       editable: true,
       type: "singleSelect",
-      valueOptions: ["Admin", "Parking System Admin", "Standard User"],
+      valueOptions: ["Admin", "ParkingSystemAdmin", "StandardUser"],
       renderCell: ({ row }) => {
+      
         let displayText = "";
         let Icon = null;
-    
-        if (row.Role.includes("Admin")) {
+        
+        let role;
+
+        if (Array.isArray(row.Role)) {
+          // row.Role bir dizi ise, en dominant role'ü bul
+          const rolePriority = ["Admin", "ParkingSystemAdmin", "StandardUser"];
+          role = rolePriority.find(priorityRole => 
+            row.Role.some(userRole => userRole === priorityRole)
+          );
+        } else {
+          // row.Role bir string ise, doğrudan kullan
+          role = row.Role;
+        }
+
+        if (role === "Admin") {
           displayText = "Admin";
           Icon = AdminPanelSettingsOutlinedIcon;
-        } else if (row.Role.includes("ParkingSystemAdmin")) {
+        } else if (role === "ParkingSystemAdmin") {
           displayText = "Parking System Admin";
           Icon = SecurityOutlinedIcon;
-        } else if (row.Role.includes("StandardUser")) {
+        } else if (role === "StandardUser") {
           displayText = "Standard User";
           Icon = LockOpenOutlinedIcon;
         }
+        
     
         return (
           <Box
@@ -130,7 +146,8 @@ const UserList = () => {
           </Box>
         );
       },
-    },
+    } ,
+     
     
     {
       field: "actions",
@@ -186,17 +203,22 @@ const UserList = () => {
 
   const handleSaveClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+   
   };
 
-
+  const handleSelectionModelChange = (newSelectionModel) => {
+    setSelectedRows(newSelectionModel);
+    console.log("Selected Rows:", newSelectionModel); // Debugging line
+ 
+  };
 
   const handleSubmit = async () => {
     console.log("Selected Rows on Submit:", selectedRows); // Debugging line
-    debugger;
+   
     const payload = {
-      users: selectedRows.map((id) => {
+      editedUsers: selectedRows.map((id) => {
         const row = userList.find((row) => row.id === id);
-        debugger;
+        
 
         let roles = [];
         if (row.Role ==="Admin") {
@@ -207,23 +229,25 @@ const UserList = () => {
           roles = ["StandardUser"];
         }
         return {
-          Username: row.Username,
+          Username: row.userName,
           Name: row.Name,
           Surname: row.Surname,
-          Mail: row.Mail,
-          Username: row.Username,
+          Mail: row.mail,
           Roles : roles
           
         };
       }),
     };
     console.log("Payload:", payload); // Debugging line
-    debugger;
+    
     try {
       await api.post("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/edituserlist", payload, {
         headers: { 'Content-Type': 'application/json' }
+        
       });
       setRefreshKey(oldKey => oldKey + 1);
+      console.log("post")
+      //window.location.reload();
     } catch (error) {
       // Handle error
       console.error("Error submitting users: ", error);
@@ -235,13 +259,16 @@ const UserList = () => {
   const processRowUpdate = (newRow) => {
     setUserList((prev) =>
       prev.map((row) => (row.id === newRow.id ? { ...row, ...newRow } : row))
+      
     );
+    
     return newRow;
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+  
 
   return (
     <Box className={`app-container ${loading ? 'gifBox' : ''}`}>
@@ -296,6 +323,7 @@ const UserList = () => {
           onRowModesModelChange={handleRowModesModelChange}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          onRowSelectionModelChange={handleSelectionModelChange}
 
         
           slotProps={{

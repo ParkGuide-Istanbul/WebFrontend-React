@@ -104,10 +104,13 @@ const ParkList = () => {
         flex: 1,
         editable : true ,
         type : "singleSelect",
-        valueOptions : ["Aktif", "İnaktif"]
+        width : 200,
+        valueOptions : ({id, row, field}) => {
+          return ['Aktif' , 'İnaktif']
+      }
         
       },
-
+    
       {
         field: "actions",
         type : "actions",
@@ -264,6 +267,9 @@ const ParkList = () => {
             "& .MuiCheckbox-root": {
           
             },
+            ".MuiButtonBase-root": {
+              display : "flex !important"
+            }
           }}
         >
           <DataGrid checkboxSelection 

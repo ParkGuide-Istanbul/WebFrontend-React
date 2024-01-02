@@ -10,3 +10,7 @@
     height: 160px;
     
 }
+
+.MuiButtonBase-root{
+  display: flex !important;
+}
