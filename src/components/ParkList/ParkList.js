@@ -265,10 +265,10 @@ const ParkList = () => {
       
             },
             "& .MuiCheckbox-root": {
-          
+              color: "green"
             },
             ".MuiButtonBase-root": {
-              display : "flex !important"
+              
             }
           }}
         >
