@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useLocation } from 'react-router-dom';
 import {ProSidebar , Menu , MenuItem} from "react-pro-sidebar"
 import "react-pro-sidebar/dist/css/styles.css"
 import {Box , IconButton , Typography , useTheme} from "@mui/material"
@@ -39,6 +39,9 @@ const Sidebar = () => {
   const [roles, setRoles] = useState(''); 
   const [combinedName, setCombinedName] = useState('');
   const [mostpowerful, setMostpowerful] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [selected, setSelected] = useState("Dashboard");
+  const location = useLocation();
 
   useEffect(() => {
     // Component mount olduğunda localStorage'dan kullanıcı adını çek
@@ -57,11 +60,23 @@ const Sidebar = () => {
     if (storedUsername) {
       setUsername(storedUsername); // State'i güncelle
     }
-  }, []); // Boş dependency array ile sadece component mount edildiğinde çalışır
+
+    const path = location.pathname;
+    if (path.includes('/dashboard')) {
+      setSelected('Dashboard');
+    } else if (path.includes('/users')) {
+      setSelected('Manage Users');
+    } else if (path.includes('/parks')) {
+      setSelected('Manage Parks');
+    }
+      else if (path.includes('/reports')) {
+        setSelected('Reports')
+      }
+
+  }, [location]); // Boş dependency array ile sadece component mount edildiğinde çalışır
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+ 
 
   const handleLogout = () => {
     localStorage.removeItem('token');

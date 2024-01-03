@@ -255,7 +255,7 @@ const UserList = () => {
       });
       setRefreshKey(oldKey => oldKey + 1);
       console.log("post")
-      //window.location.reload();
+      window.location.reload();
     } catch (error) {
       // Handle error
       console.error("Error submitting users: ", error);
