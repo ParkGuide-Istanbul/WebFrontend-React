@@ -3,10 +3,8 @@ import { useContext } from 'react';
 import UserDropdown from './UserDropdown';
 import {Box , Icon, IconButton , useTheme} from '@mui/material'
 import { ColorModeContext , tokens } from '../Theme/theme';
-import InputBase from '@mui/material'
 import  LightModeOutlinedIcon  from '@mui/icons-material/LightModeOutlined';
 import  DarkModeOutlinedIcon  from '@mui/icons-material/DarkModeOutlined';
-import  PersonOutlinedIcon  from '@mui/icons-material/PersonOutlined';
 import './Header.css';
 import logo from '../../assets/logoaraba.png';
 import userAvatar from '../../assets/useravatarazkucuk.png';

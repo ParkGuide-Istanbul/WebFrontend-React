@@ -3,15 +3,12 @@ import React, { useState, useEffect  } from 'react';
 import Button from "@material-ui/core/Button"
 import SendIcon from '@mui/icons-material/Send'
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import TablePagination from '@mui/material/TablePagination';
-import { parkData } from '../data/parkData';
+
+
 import {
   GridRowModes,
   DataGrid,
-  GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
@@ -265,6 +262,9 @@ const ParkList = () => {
       
             },
             "& .MuiCheckbox-root": {
+              color: "green"
+            },
+            "& .MuiCheckbox-root.Mui-checked": {
               color: "green"
             },
           

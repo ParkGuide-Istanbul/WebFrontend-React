@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-//import './Sidebar.css';
 import {ProSidebar , Menu , MenuItem} from "react-pro-sidebar"
 import "react-pro-sidebar/dist/css/styles.css"
 import {Box , IconButton , Typography , useTheme} from "@mui/material"
 import { tokens } from '../Theme/theme';
 import userAvatar from '../../assets/useravatarazkucuk.png';
-
-
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined"
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined"
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined"
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import SummarizeIcon from '@mui/icons-material/Summarize';
 import LogoutIcon from '@mui/icons-material/Logout';
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined"
+
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();

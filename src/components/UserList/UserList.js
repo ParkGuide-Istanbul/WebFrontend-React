@@ -317,6 +317,11 @@ const UserList = () => {
             "& .MuiCheckbox-root": {
               color : "green"
             },
+            "& .MuiCheckbox-root.Mui-checked": {
+              color: "green"
+            },
+
+            
           }}
         >
           <DataGrid checkboxSelection 
