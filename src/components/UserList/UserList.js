@@ -278,7 +278,7 @@ const UserList = () => {
   };
   
   if (!hasPermission) {
-    return <ErrorModal message={errorMessage} onClose={() => navigate('/dashboard')} />;
+    return <ErrorModal message={errorMessage} onClose={() => navigate('/parks')} />;
   }
 
   return (

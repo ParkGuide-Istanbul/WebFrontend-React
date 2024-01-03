@@ -147,6 +147,7 @@ const Sidebar = () => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          {localStorage.getItem('mostpowerful') === "Admin" && (
             <Item
               title="Dashboard"
               to="/dashboard"
@@ -154,7 +155,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
+          )}
            
           {localStorage.getItem('mostpowerful') === "Admin" && (
               <Item
@@ -174,7 +175,17 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            
+
+          {localStorage.getItem('mostpowerful') === "Admin" && (
+            <Item
+              title="Reports"
+              to="/reports"
+              icon={<PeopleOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          )} 
+         
             <Item
               className="logoutButton"
               title="Logout"
