@@ -3,30 +3,30 @@ import React, { useState, useEffect  } from 'react';
 import Button from "@material-ui/core/Button"
 import SendIcon from '@mui/icons-material/Send'
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
-import TablePagination from '@mui/material/TablePagination';
-import { parkData } from '../data/parkData';
+
+
 import {
   GridRowModes,
   DataGrid,
-  GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import api from '../../services/api';
+import './ParkList.css';
+
 
 
 
 const ParkList = () => {
   // ı want to get park list object witj a sample endpoint with using this func apiRequest(url, 'GET', null, headers)
-  debugger;
+ 
   const [parkList, setParkList] = useState([]);
   const [parkListLoading, setParkListLoading] = useState(true);
   const [parkListError, setParkListError] = useState(null);
   const [selectedRows, setSelectedRows] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,7 +34,7 @@ const ParkList = () => {
         const response = await api.get("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/listparks", {
           headers: { 'Content-Type': 'application/json' }
         });
-        debugger  ;
+       
         const transformedData = response.map(park => ({
           id: park.parkID,
           parkName: park.parkName,
@@ -42,29 +42,25 @@ const ParkList = () => {
           lng: park.lng,
           capacity: park.capacity,
           emptyCapacity: park.emptyCapacity,
-          isActive: park.state === "1" ? "Aktif" : "İnaktif"
+          isActive: park.state === "1" ? "Active" : "Inactive"
         }));
         debugger;
+        setLoading(false);
         setParkList(transformedData);
-        debugger;
+       
       } catch (error) {
-        debugger;
+        
         setParkListError(error.message);
-        debugger;
+       
       } finally {
-        debugger;
+       
         setParkListLoading(false);
-        debugger;
+       
       }
     }
     fetchData();
   }, [refreshKey]);
 
-
-
-
-   
-    
   const columns = [
     { 
       field: "id", 
@@ -73,46 +69,49 @@ const ParkList = () => {
     },
     {
       field: "parkName",
-      headerName: "Park İsmi",
+      headerName: "Park Name",
       flex: 1,
       cellClassName: "name-column--cell",
     },
     {
       field: "lat",
-      headerName: "Enlem",
+      headerName: "Latitude",
       headerAlign: "left",
       align: "left",
     },
     {
       field: "lng",
-      headerName: "Boylam",
+      headerName: "Longitude",
       flex: 1,
     },
     {
       field: "capacity",
-      headerName: "Kapasite",
+      headerName: "Capacity",
       flex: 1,
     },
     {
       field: "emptyCapacity",
-      headerName: "Boş Kapasite",
+      headerName: "Empty Capacity",
       flex: 1,
       
     },
     {
         field: "isActive",
-        headerName: "Aktiflik Durumu",
+        headerName: "Activeness",
         flex: 1,
         editable : true ,
         type : "singleSelect",
-        valueOptions : ["Aktif", "İnaktif"]
+        width : 200,
+        valueOptions : ({id, row, field}) => {
+          return ['Active' , 'Inactive']
+      }
         
       },
-
+    
       {
         field: "actions",
         type : "actions",
-        headerName: "Düzenle",
+        headerName: "Edit",
         width : 100,
         cellClassName: "actions",
         getActions : ({id, isActive}) => {
@@ -127,14 +126,8 @@ const ParkList = () => {
                   color: 'primary.main',
                 }}
                 onClick={handleSaveClick(id, isActive)}
-              />,
-              <GridActionsCellItem
-                icon={<CancelIcon />}
-                label="Cancel"
-                className="textPrimary"
-                onClick={handleCancelClick(id)}
-                color="inherit"
-              />,
+              />
+             
             ];
           }
           return [
@@ -144,13 +137,8 @@ const ParkList = () => {
               className="textPrimary"
               onClick={handleEditClick(id)}
               color="inherit"
-            />,
-            <GridActionsCellItem
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={handleDeleteClick(id)}
-              color="inherit"
-            />,
+            />
+         
           ];
 
           }
@@ -185,10 +173,17 @@ const ParkList = () => {
     const payload = {
       parks: selectedRows.map((id) => {
         const row = parkList.find((row) => row.id === id);
+        let state = []
+        if (row.isActive === "Active"){
+            state = "1"
+        }
+        else if (row.isActive === "Inactive"){
+            state = "0"
+        }
         debugger;
         return {
           parkId: row.id.toString(),
-          state: row.isActive === "Aktif" ? "1" : "0",
+          state: state
         };
       }),
     };
@@ -198,49 +193,32 @@ const ParkList = () => {
       await api.post("https://o11xc731wl.execute-api.eu-central-1.amazonaws.com/dev2/configurestateparks", payload, {
         headers: { 'Content-Type': 'application/json' }
       });
+      debugger;
       setRefreshKey(oldKey => oldKey + 1);
+      window.location.reload();
     } catch (error) {
       // Handle error
       console.error("Error submitting parks: ", error);
     }
   };
 
-  const handleUpdateParkList = (id, isActive) =>{
-    let updatedParkList = parkList.map((item)=>
-      item.id === id ? {...item, isActive: isActive} : item
-    );
-    setParkList(updatedParkList);
-  }
+  
 
   const handleEditClick = (id) => () => {
     
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id, isActive) => () => {
+  const handleSaveClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
-    handleUpdateParkList(id, isActive);
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
-  };
-
-  const handleCancelClick = (id) => () => {
-    setRowModesModel({
-      ...rowModesModel,
-      [id]: { mode: GridRowModes.View, ignoreModifications: true },
-    });
-
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
-  };
+ 
   const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+    setParkList((prev) =>
+      prev.map((row) => (row.id === newRow.id ? { ...row, ...newRow } : row))
+    );
+    return newRow;
   };
 
   const handleRowModesModelChange = (newRowModesModel) => {
@@ -251,69 +229,83 @@ const ParkList = () => {
 
   
   return (
-    <Box key={refreshKey} m="20px">
+    <Box className={`app-container ${loading ? 'gifBox' : ''}`}>
+      {loading ? (
+        // Show the loading spinner while waiting for a response
+        <img src="/logogif.gif" alt="Loading" className="gif"/>
+      ) : (
+        // Render your content when the loading is complete
+        <Box key={refreshKey} m="20px">
+        
+        <Box
+          m="40px 0 0 0"
+          height="70vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+            
+            },
+            "& .MuiDataGrid-columnHeaders": {
       
-      <Box
-        m="40px 0 0 0"
-        height="70vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-           
-          },
-          "& .MuiDataGrid-columnHeaders": {
-     
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-        
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-     
-          },
-          "& .MuiCheckbox-root": {
-        
-          },
-        }}
-      >
-        <DataGrid checkboxSelection 
-        rows={parkList} 
-        columns={columns}
-        editMode="row"
-        initialState={{
-          pagination: {
-            paginationModel : {
-              pageSize : 10
-            }
-          } 
-        }}
-        pageSizeOptions={10}
-        rowModesModel={rowModesModel}
-        onRowModesModelChange={handleRowModesModelChange}
-        onRowSelectionModelChange={handleSelectionModelChange}
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+          
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+      
+            },
+            "& .MuiCheckbox-root": {
+              color: "green"
+            },
+            "& .MuiCheckbox-root.Mui-checked": {
+              color: "green"
+            },
+          
+          }}
+        >
+          <DataGrid checkboxSelection 
+          rows={parkList} 
+          columns={columns}
+          editMode="row"
+          initialState={{
+            pagination: {
+              paginationModel : {
+                pageSize : 10
+              }
+            } 
+          }}
+          pageSizeOptions={10}
+          rowModesModel={rowModesModel}
+          onRowModesModelChange={handleRowModesModelChange}
+          onRowSelectionModelChange={handleSelectionModelChange}
 
-        onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
-       
-        slotProps={{
-          toolbar: { setRows, setRowModesModel },
-        }} 
-        />
+          onRowEditStop={handleRowEditStop}
+          processRowUpdate={processRowUpdate}
+        
+          slotProps={{
+            toolbar: { setRows, setRowModesModel },
+          }} 
+          />
 
-   
-      </Box>
     
+        </Box>
+      
+
+        
+        <Button variant = "contained" color ="secondary"  endIcon= {<SendIcon />} onClick={handleSubmit}>
+          SUBMIT
+        </Button>
+      </Box>
+      )}
 
       
-      <Button variant = "contained" color ="secondary"  endIcon= {<SendIcon />} onClick={handleSubmit}>
-        SUBMIT
-      </Button>
     </Box>
   );
 };

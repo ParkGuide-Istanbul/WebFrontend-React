@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-//import './Sidebar.css';
+import { Link , useLocation } from 'react-router-dom';
 import {ProSidebar , Menu , MenuItem} from "react-pro-sidebar"
 import "react-pro-sidebar/dist/css/styles.css"
 import {Box , IconButton , Typography , useTheme} from "@mui/material"
 import { tokens } from '../Theme/theme';
 import userAvatar from '../../assets/useravatarazkucuk.png';
-
-
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined"
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined"
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined"
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined"
+import LogoutIcon from '@mui/icons-material/Logout';
+
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -41,28 +39,50 @@ const Sidebar = () => {
   const [roles, setRoles] = useState(''); 
   const [combinedName, setCombinedName] = useState('');
   const [mostpowerful, setMostpowerful] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [selected, setSelected] = useState("Dashboard");
+  const location = useLocation();
 
   useEffect(() => {
     // Component mount olduğunda localStorage'dan kullanıcı adını çek
     const storedUsername = localStorage.getItem('username');
     const storedName = localStorage.getItem('name');
     const storedSurname = localStorage.getItem('surname');
-    const storedRoles = localStorage.getItem('roles');
-    if (storedRoles.includes("Admin")) {
-      setMostpowerful("Admin");
-    } else {
-      setMostpowerful("ParkingSystemAdmin");
-    }
+    const storedRolesString = localStorage.getItem('roles');
+    const storedRoles = storedRolesString ? storedRolesString.split(',') : [];
+    const rolePriority = ["Admin", "ParkingSystemAdmin", "StandardUser"];
+    const role = rolePriority.find(priorityRole => 
+      storedRoles.includes(priorityRole)
+    );
+    setMostpowerful(role)
+    localStorage.setItem('mostpowerful' ,role)
     setCombinedName(storedName + " " + storedSurname);
     if (storedUsername) {
       setUsername(storedUsername); // State'i güncelle
     }
-  }, []); // Boş dependency array ile sadece component mount edildiğinde çalışır
+
+    const path = location.pathname;
+    if (path.includes('/dashboard')) {
+      setSelected('Dashboard');
+    } else if (path.includes('/users')) {
+      setSelected('Manage Users');
+    } else if (path.includes('/parks')) {
+      setSelected('Manage Parks');
+    }
+      else if (path.includes('/reports')) {
+        setSelected('Reports')
+      }
+
+  }, [location]); // Boş dependency array ile sadece component mount edildiğinde çalışır
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
+ 
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.clear();
+    localStorage.setItem('authenticated', false);
+  }
 
   return (
     <Box
@@ -138,6 +158,7 @@ const Sidebar = () => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+          {localStorage.getItem('mostpowerful') === "Admin" && (
             <Item
               title="Dashboard"
               to="/dashboard"
@@ -145,27 +166,18 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
+          )}
            
-            <Item
-              title="Manage Users"
-              to="/users"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+          {localStorage.getItem('mostpowerful') === "Admin" && (
+              <Item
+                title="Manage Users"
+                to="/users"
+                icon={<PeopleOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )}
          
-          
-
-           
-            {/* <Item
-              title="Profile Form"
-              to="/profile"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
-          
             
           <Item
               title="Manage Parks"
@@ -174,10 +186,24 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            
-           
-           
-          
+
+          {localStorage.getItem('mostpowerful') === "Admin" && (
+            <Item
+              title="Reports"
+              to="/reports"
+              icon={<PeopleOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+          )} 
+         
+            <Item
+              className="logoutButton"
+              title="Logout"
+              to="/login"
+              icon={<LogoutIcon />}
+              setSelected={handleLogout}
+            />
            
           </Box>
         </Menu>
