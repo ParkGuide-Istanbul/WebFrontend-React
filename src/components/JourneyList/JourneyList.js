@@ -122,7 +122,7 @@ const JourneyList = () => {
   const [rows, setRows] = React.useState(columns);
 
   if (!hasPermission) {
-    return <ErrorModal message={errorMessage} onClose={() => navigate('/parks')} />;
+    return  navigate('/parks');
   }
 
   return (
